@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 mongoose.set('useCreateIndex', true)
-mongoose.connect('mongodb+srv://adao:adao@cluster0-qiqip.mongodb.net/mydrive?retryWrites=true&w=majority',
+mongoose.connect('mongodb+srv://adao:adao@cluster0-qiqip.mongodb.net/mycloud?retryWrites=true&w=majority',
     {useNewUrlParser:true})
    //mongoose.connect('mongodb://localhost/mydrive',{useNewUrlParser:true})
 
