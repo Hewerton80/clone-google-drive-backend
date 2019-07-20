@@ -7,7 +7,7 @@ const path = require('path')
 const find = require('find')
 const {zip} = require('zip-a-folder')
 const getSize = require('get-folder-size');
-const {URL,PORT} = require('../../config/env')
+const {URL} = require('../../config/env')
 
 class FolderController{
     async get_folder(req,res){

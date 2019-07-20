@@ -1,8 +1,8 @@
 const mongoose = require('mongoose')
+const {DATABASE} = require('./env')
 
 mongoose.set('useCreateIndex', true)
-mongoose.connect('mongodb+srv://adao:adao@cluster0-qiqip.mongodb.net/mycloud?retryWrites=true&w=majority',
-    {useNewUrlParser:true})
+mongoose.connect(DATABASE,{useNewUrlParser:true})
    //mongoose.connect('mongodb://localhost/mydrive',{useNewUrlParser:true})
 
 mongoose.Promise = global.Promise;
