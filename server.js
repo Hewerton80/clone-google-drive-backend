@@ -7,17 +7,18 @@ const app = express()
 const http = require('http').Server(app)
 const io = require('socket.io')(http)
 
-io.on('connection',socket=>{
+app.use(cors())
+/*io.on('connection',socket=>{
     socket.on('connectRoon',box=>{
         socket.join(box)
     })
 })
 //Middlewares globais
-/*app.use((req,res,next )=>{
+app.use((req,res,next )=>{
     req.io = io
     return next()
 })*/
-app.use(cors())
+
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended:true}))
 /*basicamente está sendo feito um redirecionamento.
