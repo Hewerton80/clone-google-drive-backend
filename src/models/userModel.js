@@ -19,6 +19,9 @@ const UserSchema = Schema({
     folders:[{
         type:Schema.Types.ObjectId, ref:'Folder',
     }],
+    foldersPermition:[{
+        type:Schema.Types.ObjectId, ref:'Folder',
+    }],
     files:[{
         type:Schema.Types.ObjectId, ref:'File'
     }],

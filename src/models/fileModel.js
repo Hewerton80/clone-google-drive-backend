@@ -6,13 +6,13 @@ const {URL,PORT} = require('../../config/env')
 const Schema = mongoose.Schema
 
 const FileSchema = new Schema({
-	title:{
-		type:String,
-		required:true
-	},
-	path:{
-		type:String,
-		required:true	
+    title:{
+        type:String,
+        required:true
+    },
+    path:{
+        type:String,
+        required:true   
     },
     mimetype:{
         type:String,
@@ -31,9 +31,9 @@ const FileSchema = new Schema({
     },
 },
 {
-	timestamps : true, //adiciona os campos createdAt e updatedAt
-	toObject:{ virtuals:true },
-	toJSON:{ virtuals:true }	
+    timestamps : true, //adiciona os campos createdAt e updatedAt
+    toObject:{ virtuals:true },
+    toJSON:{ virtuals:true }    
 });
 
 FileSchema.plugin(relationship,{
@@ -47,8 +47,8 @@ FileSchema.virtual('url').get(  function() {
     const index =  pathList.findIndex(dir => dir === 'uploads')
     pathList =  pathList.filter((dir,i)=> i >index)
     pathList = pathList.join('/')
-	file =  `${URL}/files/${pathList}`
+    file =  `${URL}/files/${pathList}`
 
-	return file
+    return file
 })
 module.exports = mongoose.model('File',FileSchema)

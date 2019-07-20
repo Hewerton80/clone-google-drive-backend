@@ -1,22 +1,25 @@
 const router = require('express').Router()
-const AuthMidlleware = require('../src/midllewares/authMidlleware')
+const authMiddleware = require('../src/middlewares/authMiddleware')
+const PermitionMiddlaware = require('../src/middlewares/permitionMiddleware')
+const ExistsMiddlaware = require('../src/middlewares/existsMiddleware')
+const multerMiddleware = require('../src/middlewares/multerMiddleware')
 const FolderController = require('../src/controllers/folderController')
 const FileController = require('../src/controllers/fileController')
 const multer = require('multer')
-const multerMiddleware = require('../src/midllewares/multerMiddlware')
 const upload = multer(multerMiddleware)
 
 
-router.use('/mycloud',AuthMidlleware)
-router.use('/trash',AuthMidlleware)
-router.get('/teste',FolderController.teste)
+router.use('/mycloud',authMiddleware)
+router.use('/trash',authMiddleware)
 
 //get mycoud and trash
-router.get('/mycloud/:id',FolderController.show)
-router.get('/trash/:id',FolderController.show)
+router.get('/mycloud/:id',ExistsMiddlaware,PermitionMiddlaware.read,FolderController.show,)
+router.get('/trash/:id',ExistsMiddlaware,FolderController.show)
 
 //folder in mycloud
+router.get('/mycloud/folder/:id',FolderController.get_folder)
 router.get('/mycloud/zip/folder/:id',FolderController.zip)
+
 router.post('/mycloud/:id/store/folder',FolderController.store)
 router.put('/mycloud/update/folder/:id',FolderController.upadate)
 router.put('/mycloud/delete/folder/:id',FolderController.delete)

@@ -13,67 +13,62 @@ function geraToken(params={}){
 }
 class AuthControler{
     async register(req,res){
-        const {name,email,password} = req.body
-        if(await User.findOne({email:email})){
-            return res.status(404).json({erro:'Este email já existe'})
-        }
-         
-        const user = await new User({name,email,password})
-        if(!user){
-            return res.status(422).json({erro:'dados inválidos para cadastro'})
-        }
-        const mydrive = await new Folder({title:'mydrive'})
-        const trash = await new Folder({title:'trash'})
-        const userPath = path.resolve(__dirname,'..','..','uploads',`${user.name}-${user._id}`)
-        //criar pasta do usuário
-        fs.mkdir(userPath,{recursive:true},(err)=>{
-            if(err){
-                console.log('erro-->> '+err)
-                return res.status(400).json('erro no cadastro')
+        try{
+            const {name,email,password} = req.body
+            if(await User.findOne({email:email})){
+                return res.status(400).json({erro:'Este email já existe'})
             }
-        })
-        mydrive.path = path.join(userPath,`${mydrive.title} -- ${mydrive._id}`)
-        trash.path = path.join(userPath,`${trash.title} -- ${trash._id}`)
-        //cria mycloud
-        fs.mkdir(mydrive.path,{recursive:true},(err)=>{
-            if(err){
-                console.log('erro-->> '+err)
-                return res.status(400).json('erro no cadastro')
-            }
-        })
-        //cria trash
-        fs.mkdir(trash.path,{recursive:true},(err)=>{
-            if(err){
-                console.log('erro-->> '+err)
-                return res.status(400).json('erro no cadastro')
-            }
-        })
+            const user = await new User({name,email,password})
+            const mycloud = await new Folder({title:'mycloud'})
+            const trash = await new Folder({title:'trash'})
+            const userPath = path.resolve(__dirname,'..','..','uploads',`${user.name} -- ${user._id}`)
+            //criar pasta do usuário
+            await fs.mkdirSync(userPath,{recursive:true})
+            mycloud.path = path.join(userPath,`${mycloud.title} -- ${mycloud._id}`)
+            trash.path = path.join(userPath,`${trash.title} -- ${trash._id}`)
+            //cria mycloud
+            await fs.mkdirSync(mycloud.path,{recursive:true})
+            //cria trash
+            await fs.mkdirSync(trash.path,{recursive:true})
 
-        await mydrive.save()
-        await trash.save()
+            await mycloud.save()
+            await trash.save()
 
-        await user.folders.push(mydrive)
-        await user.folders.push(trash)
-        await user.save()
-        user.password=undefined
-        const token = await geraToken({id:user.id})
-        return res.status(200).json({user,token})
+            await user.folders.push(mycloud)
+            await user.folders.push(trash)
+            await user.foldersPermition.push(mycloud)
+            await user.foldersPermition.push(trash)
+            await user.save()
+            user.password=undefined
+            const token = await geraToken({id:user.id})
+            return res.status(200).json({user,token})
+        }
+        catch(err){
+            console.log(err);
+            return res.status(500).json({err:'Erro'})
+        } 
   
     }
     async authenticate(req,res){
-        const email = req.body.email
-        const password = req.body.password
-        const user = await User.findOne({email:email}).select('+password').populate('folders files')
+        try{
+            const email = req.body.email
+            const password = req.body.password
+            const user = await User.findOne({email:email}).select('+password').populate('folders files')
 
-        if(!user){
-            return res.status(400).json({erro:"este email não está cadastrado"})
+            if(!user){
+                return res.status(400).json({erro:"este email não está cadastrado"})
+            }
+            if(!await bcrypt.compare(password , user.password)){
+                return res.status(400).json({erro:"senha incorreta"})
+            }
+            const token = await geraToken({id:user.id})
+            user.password = await undefined
+            return res.status(200).json({user,token})
         }
-        if(!await bcrypt.compare(password , user.password)){
-                return res.status(401).json({erro:"senha incorreta"})
-        }
-        const token = await geraToken({id:user.id})
-        user.password = await undefined
-        return res.status(200).json({user,token})
+        catch(err){
+            console.log(err);
+            return res.status(500).json({err:'Erro'})
+        } 
     }
     async forgot_password(req,res){
         const email = await req.body.email
@@ -134,4 +129,3 @@ class AuthControler{
     }
 }
 module.exports = new AuthControler()
-

@@ -10,14 +10,15 @@ Multer = {
     storage : multer.diskStorage({
         destination: async function (req, file, cb) {
             console.log('---------passou poelo multer-----------\n\n\n')
-            console.log('id: ' + req.params.id)
+            //console.log('id: ' + req.params.id)
             const folderFather = await Folder.findById(req.params.id)
             req.folderFatherPath = folderFather.path
             req.folderFather_id = folderFather.id
-            console.log('folderFather.path: '+folderFather.path)
+            //console.log('folderFather.path: '+folderFather.path)
             cb(null, folderFather.path)
         },
         filename: async function (req, file, cb){
+            //console.log(req.folderFather_id);
             const newFile = await new File({
                 title        : file.originalname,
                 mimetype     : file.mimetype,
@@ -25,8 +26,8 @@ Multer = {
             })
             const key = newFile._id +' -- '+file.originalname
             newFile.path = path.join(req.folderFatherPath,key)
-            console.log('newFile:' + newFile.path)
-            await newFile.save()
+            //console.log('newFile:' + newFile.path)
+            //await newFile.save()
             req.newFile = newFile
 
             cb(null, key)
