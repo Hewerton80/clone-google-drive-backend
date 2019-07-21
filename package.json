@@ -4,7 +4,8 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "start:dev": "nodemon server.js"
   },
   "keywords": [],
   "author": "",
@@ -17,6 +18,7 @@
     "express": "^4.16.4",
     "find": "^0.3.0",
     "fs-extra": "^8.1.0",
+    "get-folder-size": "^2.0.1",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.5.6",
     "mongoose-relationship": "^0.1.5",
