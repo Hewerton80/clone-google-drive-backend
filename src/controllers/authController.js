@@ -14,10 +14,11 @@ function geraToken(params={}){
 class AuthControler{
     async register(req,res){
         try{
-            const {name,email,password} = req.body
+            const {name,email} = req.body
             if(await User.findOne({email:email})){
                 return res.status(400).json({erro:'Este email já existe'})
             }
+            const password = await bcrypt.hash(req.body.password,10)
             const user = await new User({name,email,password})
             const mycloud = await new Folder({title:'mycloud'})
             const trash = await new Folder({title:'trash'})
