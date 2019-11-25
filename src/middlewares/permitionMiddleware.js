@@ -9,7 +9,6 @@ const find = require('find')
 class PermitionMiddleware{
 
 	async read(req,res,next){
-		console.log('entrou no midlleware de permição');
 		const id = req.params.id
         const user = await User.findById(req.userId)
         //console.log(Object.getOwnPropertyNames(user.foldersPermition))

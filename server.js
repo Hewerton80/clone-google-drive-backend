@@ -1,23 +1,16 @@
 const express = require('express')
 const cors = require('cors')
 const bodyParser = require('body-parser')
-const path = require('path')
+const path = require('path') 
 const {PORT} = require('./config/env')
 const app = express()
-const http = require('http').Server(app)
-const io = require('socket.io')(http)
+const server = require('http').Server(app)
+const io = require('socket.io')(server)
 
 app.use(cors())
-/*io.on('connection',socket=>{
-    socket.on('connectRoon',box=>{
-        socket.join(box)
-    })
-})
+
 //Middlewares globais
-app.use((req,res,next )=>{
-    req.io = io
-    return next()
-})*/
+app.use(require('./src/sockets')(io))
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended:true}))
@@ -30,6 +23,6 @@ app.use('/files',express.static(path.resolve(__dirname,'uploads')))
 //load routes
 require('./routes')(app)
 
-app.listen(PORT,()=>{
+server.listen(PORT,()=>{
     console.log(`Ativo em ${PORT}`)
 })
